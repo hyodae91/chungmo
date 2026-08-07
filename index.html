@@ -8,132 +8,244 @@
   :root{
     --deuk:#3b6ef6;
     --bbung:#ef476f;
-    --bg:#f6f7fb;
+    --bg:#f5f6fa;
     --card:#ffffff;
     --border:#e5e7ef;
     --text:#222;
     --muted:#8a8f98;
     --done:#c9cdd6;
   }
+
   *{box-sizing:border-box;}
+
+  html{scroll-behavior:smooth;}
+
   body{
     font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Malgun Gothic",Arial,sans-serif;
     background:var(--bg);
     margin:0;
-    padding:32px 16px 64px;
+    padding:0 16px 64px;
     color:var(--text);
   }
+
+  .app-shell{
+    max-width:720px;
+    margin:0 auto;
+  }
+
+  .topbar{
+    position:sticky;
+    top:0;
+    z-index:20;
+    background:rgba(245,246,250,.94);
+    backdrop-filter:blur(14px);
+    -webkit-backdrop-filter:blur(14px);
+    padding:18px 0 12px;
+  }
+
   h1{
     text-align:center;
-    font-size:24px;
-    margin-bottom:4px;
+    font-size:23px;
+    margin:0 0 4px;
+    letter-spacing:-.5px;
   }
+
   .subtitle{
     text-align:center;
     color:var(--muted);
-    font-size:13px;
-    margin-bottom:28px;
+    font-size:12px;
+    margin:0 0 10px;
   }
-  .container{
-    max-width:1100px;
-    margin:0 auto;
-    display:flex;
-    flex-direction:row;
-    align-items:flex-start;
-    gap:20px;
-    flex-wrap:wrap;
+
+  .tabs{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:4px;
+    padding:4px;
+    background:#e9ebf1;
+    border-radius:14px;
+    box-shadow:inset 0 1px 2px rgba(0,0,0,.04);
   }
+
+  .tab{
+    border:0;
+    border-radius:11px;
+    padding:11px 10px;
+    font-size:16px;
+    font-weight:800;
+    color:#777d87;
+    background:transparent;
+    cursor:pointer;
+    transition:all .2s ease;
+    -webkit-tap-highlight-color:transparent;
+  }
+
+  .tab.active{
+    background:#fff;
+    color:var(--deuk);
+    box-shadow:0 2px 8px rgba(0,0,0,.08);
+  }
+
+  .tab[data-person="bbung"].active{
+    color:var(--bbung);
+  }
+
+  .sync-status{
+    text-align:center;
+    color:var(--muted);
+    font-size:11px;
+    margin:8px 0 0;
+    min-height:16px;
+  }
+
+  .stats{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:8px;
+    margin:12px 0 14px;
+  }
+
+  .stat-card{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:13px;
+    padding:11px 8px;
+    text-align:center;
+  }
+
+  .stat-label{
+    display:block;
+    color:var(--muted);
+    font-size:10px;
+    margin-bottom:4px;
+  }
+
+  .stat-value{
+    display:block;
+    font-size:17px;
+    font-weight:800;
+    letter-spacing:-.3px;
+  }
+
+  .schedule-panel{
+    animation:panelIn .2s ease;
+  }
+
+  @keyframes panelIn{
+    from{opacity:.5;transform:translateY(5px);}
+    to{opacity:1;transform:translateY(0);}
+  }
+
   .person-card{
     background:var(--card);
-    border-radius:14px;
+    border-radius:16px;
     border:1px solid var(--border);
     overflow:hidden;
-    box-shadow:0 1px 3px rgba(0,0,0,0.04);
-    flex:1 1 480px;
-    min-width:320px;
+    box-shadow:0 2px 10px rgba(0,0,0,.04);
   }
+
   .person-header{
-    padding:14px 20px;
+    padding:15px 18px;
     font-size:17px;
-    font-weight:700;
+    font-weight:800;
     color:#fff;
     display:flex;
     justify-content:space-between;
     align-items:center;
   }
+
   .person-header .count-summary{
-    font-size:12px;
+    font-size:11px;
     font-weight:500;
-    opacity:0.9;
+    opacity:.92;
   }
+
   .deuk-header{background:var(--deuk);}
   .bbung-header{background:var(--bbung);}
+
+  .table-wrap{overflow-x:auto;}
+
   table{
     width:100%;
     border-collapse:collapse;
-    font-size:14px;
+    font-size:13px;
+    min-width:560px;
   }
+
   th{
     text-align:left;
-    padding:10px 12px;
+    padding:9px 10px;
     background:#fafbfd;
     color:var(--muted);
     font-weight:600;
-    font-size:12px;
+    font-size:11px;
     border-bottom:1px solid var(--border);
     white-space:nowrap;
   }
+
   td{
-    padding:10px 12px;
+    padding:10px;
     border-bottom:1px solid var(--border);
     vertical-align:middle;
   }
+
   tbody tr:last-child td{border-bottom:none;}
+
   tr.done td{
     color:var(--done);
     text-decoration:line-through;
   }
+
   tr.done .dday-badge{
     background:#eee !important;
     color:var(--done) !important;
   }
-  .date-cell{white-space:nowrap;font-weight:600;}
-  .name-cell{word-break:break-word;}
+
+  .date-cell{white-space:nowrap;font-weight:700;}
+  .name-cell{word-break:break-word;line-height:1.35;}
+
   .count-input{
     width:48px;
     padding:5px 6px;
     border:1px solid var(--border);
-    border-radius:6px;
+    border-radius:7px;
     text-align:center;
-    font-size:14px;
+    font-size:13px;
   }
+
   .count-input:focus{outline:2px solid #3b6ef633;}
+
   .dday-badge{
     display:inline-block;
-    min-width:52px;
+    min-width:48px;
     text-align:center;
-    padding:4px 8px;
+    padding:4px 7px;
     border-radius:20px;
-    font-size:12px;
-    font-weight:700;
+    font-size:11px;
+    font-weight:800;
     background:#eef1ff;
     color:var(--deuk);
   }
+
   .dday-badge.today{
     background:#fff1cc;
     color:#b8860b;
   }
+
   .dday-badge.past{
     background:#f0f0f0;
     color:var(--muted);
   }
+
   .check-cell{text-align:center;width:32px;}
   .del-cell{text-align:center;width:28px;}
+
   input[type="checkbox"]{
     width:18px;
     height:18px;
     cursor:pointer;
   }
+
   .del-btn{
     border:none;
     background:none;
@@ -141,140 +253,143 @@
     font-size:16px;
     cursor:pointer;
     line-height:1;
-    padding:2px 4px;
-    border-radius:4px;
+    padding:3px 5px;
+    border-radius:6px;
   }
+
   .del-btn:hover{
     color:#ef476f;
     background:#fdeaee;
   }
+
   .empty{
-    padding:20px;
+    padding:28px 20px !important;
     text-align:center;
     color:var(--muted);
     font-size:13px;
   }
+
   .add-row{
-    display:flex;
+    display:grid;
+    grid-template-columns:1fr 1.4fr 64px auto;
     gap:6px;
     padding:12px;
     background:#fafbfd;
     border-top:1px solid var(--border);
-    flex-wrap:wrap;
     align-items:center;
   }
-  .add-row input[type="date"]{
-    padding:6px 8px;
-    border:1px solid var(--border);
-    border-radius:6px;
-    font-size:13px;
-    flex:0 0 auto;
-  }
-  .add-row input[type="text"]{
-    padding:6px 8px;
-    border:1px solid var(--border);
-    border-radius:6px;
-    font-size:13px;
-    flex:1 1 120px;
-    min-width:100px;
-  }
+
+  .add-row input[type="date"],
+  .add-row input[type="text"],
   .add-row input[type="number"]{
-    width:56px;
-    padding:6px 6px;
+    padding:8px 8px;
     border:1px solid var(--border);
-    border-radius:6px;
-    font-size:13px;
+    border-radius:7px;
+    font-size:12px;
+    min-width:0;
+  }
+
+  .add-row input[type="number"]{
     text-align:center;
   }
+
   .add-btn{
-    padding:7px 14px;
+    padding:8px 12px;
     border:none;
-    border-radius:6px;
+    border-radius:7px;
     background:var(--text);
     color:#fff;
-    font-size:13px;
-    font-weight:600;
+    font-size:12px;
+    font-weight:700;
     cursor:pointer;
     white-space:nowrap;
   }
+
   .add-btn.deuk-btn{background:var(--deuk);}
   .add-btn.bbung-btn{background:var(--bbung);}
-  .add-btn:hover{opacity:0.88;}
+  .add-btn:hover{opacity:.88;}
+
   .footer-note{
     text-align:center;
     color:var(--muted);
-    font-size:12px;
-    margin-top:24px;
+    font-size:11px;
+    line-height:1.5;
+    margin-top:16px;
   }
-  @media (max-width: 760px){
-    .container{flex-direction:column;}
-    .person-card{flex:1 1 auto;width:100%;}
+
+  @media (max-width:600px){
+    body{padding:0 10px 48px;}
+
+    .topbar{padding-top:14px;}
+
+    h1{font-size:21px;}
+
+    .stats{gap:6px;}
+
+    .stat-card{padding:10px 5px;}
+
+    .stat-value{font-size:16px;}
+
+    .person-header{padding:14px 15px;}
+
+    .add-row{
+      grid-template-columns:1fr 1.4fr 58px;
+    }
+
+    .add-btn{
+      grid-column:1 / -1;
+      width:100%;
+      padding:10px;
+    }
+
+    table{font-size:12px;}
+  }
+
+  @media (max-width:380px){
+    .stats{grid-template-columns:1fr 1fr 1fr;}
+    .stat-label{font-size:9px;}
+    .stat-value{font-size:15px;}
   }
 </style>
 </head>
 <body>
+  <div class="app-shell">
+    <div class="topbar">
+      <h1>청첩장 모임 일정</h1>
+      <div class="subtitle" id="todayLabel"></div>
 
-<h1>청첩장 모임 일정</h1>
-<div class="subtitle" id="todayLabel"></div>
-<div class="subtitle" id="syncStatus" style="margin-top:-20px;">연결 중...</div>
+      <div class="tabs">
+        <button id="tab-deuk" class="tab active" data-person="deuk" onclick="switchTab('deuk')">득</button>
+        <button id="tab-bbung" class="tab" data-person="bbung" onclick="switchTab('bbung')">뿡</button>
+      </div>
 
-<div class="container">
-  <div class="person-card">
-    <div class="person-header deuk-header">
-      <span>득</span>
-      <span class="count-summary" id="deuk-summary"></span>
+      <div class="sync-status" id="syncStatus">연결 중...</div>
     </div>
-    <table>
-      <thead>
-        <tr>
-          <th class="check-cell"></th>
-          <th>날짜</th>
-          <th>모임명</th>
-          <th>인원 수</th>
-          <th>D-day</th>
-          <th class="del-cell"></th>
-        </tr>
-      </thead>
-      <tbody id="deuk-body"></tbody>
-    </table>
-    <div class="add-row">
-      <input type="date" id="deuk-date">
-      <input type="text" id="deuk-name" placeholder="모임명">
-      <input type="number" id="deuk-count" min="1" value="1">
-      <button class="add-btn deuk-btn" onclick="addRow('deuk')">+ 모임 추가</button>
-    </div>
-  </div>
 
-  <div class="person-card">
-    <div class="person-header bbung-header">
-      <span>뿡</span>
-      <span class="count-summary" id="bbung-summary"></span>
+    <div class="stats">
+      <div class="stat-card">
+        <span class="stat-label">전체 일정</span>
+        <span class="stat-value" id="stat-total">0건</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-label">예정 인원</span>
+        <span class="stat-value" id="stat-people">0명</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-label">완료</span>
+        <span class="stat-value" id="stat-done">0건</span>
+      </div>
     </div>
-    <table>
-      <thead>
-        <tr>
-          <th class="check-cell"></th>
-          <th>날짜</th>
-          <th>모임명</th>
-          <th>인원 수</th>
-          <th>D-day</th>
-          <th class="del-cell"></th>
-        </tr>
-      </thead>
-      <tbody id="bbung-body"></tbody>
-    </table>
-    <div class="add-row">
-      <input type="date" id="bbung-date">
-      <input type="text" id="bbung-name" placeholder="모임명">
-      <input type="number" id="bbung-count" min="1" value="1">
-      <button class="add-btn bbung-btn" onclick="addRow('bbung')">+ 모임 추가</button>
+
+    <div class="schedule-panel" id="schedule-panel"></div>
+
+    <div class="footer-note">
+      모임 추가·인원 수 수정·완료 체크 내용은 실시간으로 동기화됩니다.<br>
+      모든 접속자에게 동일하게 반영되며 일정은 날짜순으로 자동 정렬됩니다.
     </div>
   </div>
-</div>
 
-<div class="footer-note">모임 추가·인원 수 수정·완료 체크 내용은 실시간으로 동기화되어 이 파일을 열어본 모든 사람에게 동일하게 보입니다. 표는 날짜순으로 자동 정렬됩니다.</div>
-
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
 <script>
 // ---- Firebase 연동 ----
@@ -291,6 +406,7 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 const meetingsRef = db.ref("meetings");
+let currentTab = localStorage.getItem("chungmo-current-tab") || "deuk";
 
 // ---- 최초 1회 시딩용 초기 데이터 (연도는 2026년 기준) ----
 const initialData = [
@@ -305,6 +421,7 @@ const initialData = [
   { person: "deuk", date: "2026-08-28", name: "동업계모임", count: 1 },
   { person: "deuk", date: "2026-09-03", name: "풋사과 05~08", count: 1 },
   { person: "deuk", date: "2026-09-04", name: "동국홍보대사 91", count: 1 },
+
   // 뿡
   { person: "bbung", date: "2026-08-15", name: "상빈,지예", count: 2 },
   { person: "bbung", date: "2026-08-17", name: "다운,채원", count: 2 },
@@ -314,15 +431,14 @@ const initialData = [
   { person: "bbung", date: "2026-09-13", name: "수완,지선,수진,세진,주희", count: 5 },
 ];
 
-let data = {}; // { id: { person, date, name, count, done } }
+let data = {};
 let seeded = false;
 
-// 실시간 구독: 누군가 값을 바꾸면 모든 접속자 화면이 자동 갱신됩니다.
+// 실시간 구독
 meetingsRef.on("value", (snapshot) => {
   const val = snapshot.val();
 
   if (!val && !seeded) {
-    // DB가 비어있으면 최초 1회만 초기 데이터로 시딩
     seeded = true;
     const seedObj = {};
     initialData.forEach(item => {
@@ -330,7 +446,7 @@ meetingsRef.on("value", (snapshot) => {
       seedObj[key] = { ...item, done: false };
     });
     meetingsRef.set(seedObj);
-    return; // set()이 다시 value 이벤트를 발생시켜 아래 render로 이어짐
+    return;
   }
 
   data = val || {};
@@ -400,72 +516,136 @@ function addRow(person){
   countInput.value = "1";
 }
 
+function switchTab(person){
+  currentTab = person;
+  localStorage.setItem("chungmo-current-tab", person);
+
+  document.querySelectorAll(".tab").forEach(tab => {
+    tab.classList.toggle("active", tab.dataset.person === person);
+  });
+
+  render();
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
 function render(){
   const todayLabel = document.getElementById("todayLabel");
   const today = new Date();
-  todayLabel.textContent = `오늘: ${today.getFullYear()}.${today.getMonth()+1}.${today.getDate()} 기준 자동 계산`;
+  todayLabel.textContent =
+    `오늘: ${today.getFullYear()}.${today.getMonth()+1}.${today.getDate()} 기준`;
 
-  ["deuk", "bbung"].forEach(person => {
-    const body = document.getElementById(person + "-body");
-    body.innerHTML = "";
+  renderStats();
 
-    const rows = Object.entries(data)
-      .map(([id, item]) => ({ id, ...item }))
-      .filter(d => d.person === person)
-      .sort((a, b) => a.date.localeCompare(b.date));
+  const panel = document.getElementById("schedule-panel");
+  const person = currentTab;
+  const isDeuk = person === "deuk";
+  const label = isDeuk ? "득" : "뿡";
+  const headerClass = isDeuk ? "deuk-header" : "bbung-header";
+  const buttonClass = isDeuk ? "deuk-btn" : "bbung-btn";
 
-    let total = 0, doneCount = 0;
+  const rows = Object.entries(data)
+    .map(([id, item]) => ({ id, ...item }))
+    .filter(d => d.person === person)
+    .sort((a, b) => a.date.localeCompare(b.date));
 
-    rows.forEach(item => {
-      const tr = document.createElement("tr");
-      if(item.done) tr.classList.add("done");
+  let total = 0;
+  let doneCount = 0;
 
-      const dday = calcDday(item.date);
-      total += item.count;
-      if(item.done) doneCount++;
+  rows.forEach(item => {
+    total += Number(item.count) || 0;
+    if(item.done) doneCount++;
+  });
 
-      tr.innerHTML = `
-        <td class="check-cell"><input type="checkbox" ${item.done ? "checked" : ""}></td>
+  const summary = `총 ${rows.length}건 · ${total}명 · 완료 ${doneCount}/${rows.length}`;
+
+  const tableRows = rows.map(item => {
+    const dday = calcDday(item.date);
+
+    return `
+      <tr class="${item.done ? "done" : ""}">
+        <td class="check-cell">
+          <input type="checkbox"
+            ${item.done ? "checked" : ""}
+            onchange="toggleDone('${item.id}', this.checked)">
+        </td>
         <td class="date-cell">${formatDateLabel(item.date)}</td>
-        <td class="name-cell">${item.name}</td>
-        <td><input type="number" min="1" class="count-input" value="${item.count}"></td>
+        <td class="name-cell">${escapeHtml(item.name)}</td>
+        <td>
+          <input type="number" min="1" class="count-input"
+            value="${Number(item.count) || 1}"
+            onchange="updateCount('${item.id}', this.value)">
+        </td>
         <td><span class="dday-badge ${dday.cls}">${dday.label}</span></td>
-        <td class="del-cell"><button class="del-btn" title="삭제">✕</button></td>
-      `;
+        <td class="del-cell">
+          <button class="del-btn" title="삭제"
+            onclick="deleteRow('${item.id}')">✕</button>
+        </td>
+      </tr>
+    `;
+  }).join("");
 
-      tr.querySelector('input[type="checkbox"]').addEventListener("change", (e) => {
-        toggleDone(item.id, e.target.checked);
-        tr.classList.toggle("done", e.target.checked);
-        updateSummary();
-      });
+  panel.innerHTML = `
+    <div class="person-card">
+      <div class="person-header ${headerClass}">
+        <span>${label}</span>
+        <span class="count-summary">${summary}</span>
+      </div>
 
-      tr.querySelector(".count-input").addEventListener("change", (e) => {
-        const v = updateCount(item.id, e.target.value);
-        e.target.value = v;
-        updateSummary();
-      });
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th class="check-cell"></th>
+              <th>날짜</th>
+              <th>모임명</th>
+              <th>인원 수</th>
+              <th>D-day</th>
+              <th class="del-cell"></th>
+            </tr>
+          </thead>
+          <tbody>
+            ${tableRows || '<tr><td colspan="6" class="empty">일정 없음</td></tr>'}
+          </tbody>
+        </table>
+      </div>
 
-      tr.querySelector(".del-btn").addEventListener("click", () => {
-        deleteRow(item.id);
-      });
+      <div class="add-row">
+        <input type="date" id="${person}-date">
+        <input type="text" id="${person}-name" placeholder="모임명">
+        <input type="number" id="${person}-count" min="1" value="1">
+        <button class="add-btn ${buttonClass}" onclick="addRow('${person}')">+ 모임 추가</button>
+      </div>
+    </div>
+  `;
 
-      body.appendChild(tr);
-    });
-
-    if(rows.length === 0){
-      body.innerHTML = '<tr><td colspan="6" class="empty">일정 없음</td></tr>';
-    }
-
-    function updateSummary(){
-      const current = Object.values(data).filter(d => d.person === person);
-      const t = current.reduce((sum, d) => sum + d.count, 0);
-      const dn = current.filter(d => d.done).length;
-      document.getElementById(person + "-summary").textContent =
-        `총 ${current.length}건 · ${t}명 · 완료 ${dn}/${current.length}`;
-    }
-    updateSummary();
+  // Firebase 값이 갱신되어 render()가 다시 실행되어도 현재 탭 유지
+  document.querySelectorAll(".tab").forEach(tab => {
+    tab.classList.toggle("active", tab.dataset.person === currentTab);
   });
 }
+
+function renderStats(){
+  const all = Object.values(data);
+  const current = all.filter(item => item.person === currentTab);
+
+  const totalCount = current.length;
+  const totalPeople = current.reduce((sum, item) => sum + (Number(item.count) || 0), 0);
+  const doneCount = current.filter(item => item.done).length;
+
+  document.getElementById("stat-total").textContent = `${totalCount}건`;
+  document.getElementById("stat-people").textContent = `${totalPeople}명`;
+  document.getElementById("stat-done").textContent = `${doneCount}건`;
+}
+
+function escapeHtml(value){
+  return String(value ?? "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
+
 // D-day는 페이지를 열 때마다, 그리고 값이 바뀔 때마다 실제 현재 날짜 기준으로 자동 재계산됩니다.
 // render()는 Firebase의 실시간 리스너(meetingsRef.on("value", ...))가 호출합니다.
 </script>
