@@ -169,7 +169,7 @@
     width:100%;
     border-collapse:collapse;
     font-size:13px;
-    min-width:560px;
+    min-width:760px;
   }
 
   th{
@@ -203,6 +203,25 @@
 
   .date-cell{white-space:nowrap;font-weight:700;}
   .name-cell{word-break:break-word;line-height:1.35;}
+
+  .cost-input{
+    width:92px;
+    padding:5px 6px;
+    border:1px solid var(--border);
+    border-radius:7px;
+    text-align:right;
+    font-size:13px;
+  }
+
+  .cost-per-person{
+    white-space:nowrap;
+    font-weight:700;
+    font-variant-numeric:tabular-nums;
+  }
+
+  .cost-total{
+    font-variant-numeric:tabular-nums;
+  }
 
   .count-input{
     width:48px;
@@ -271,7 +290,7 @@
 
   .add-row{
     display:grid;
-    grid-template-columns:1fr 1.4fr 64px auto;
+    grid-template-columns:1fr 1.4fr 64px 110px auto;
     gap:6px;
     padding:12px;
     background:#fafbfd;
@@ -333,7 +352,7 @@
     .person-header{padding:14px 15px;}
 
     .add-row{
-      grid-template-columns:1fr 1.4fr 58px;
+      grid-template-columns:1fr 1.25fr 58px 100px;
     }
 
     .add-btn{
@@ -376,15 +395,15 @@
         <span class="stat-value" id="stat-people">0명</span>
       </div>
       <div class="stat-card">
-        <span class="stat-label">완료</span>
-        <span class="stat-value" id="stat-done">0건</span>
+        <span class="stat-label">총 비용</span>
+        <span class="stat-value" id="stat-cost">0원</span>
       </div>
     </div>
 
     <div class="schedule-panel" id="schedule-panel"></div>
 
     <div class="footer-note">
-      모임 추가·인원 수 수정·완료 체크 내용은 실시간으로 동기화됩니다.<br>
+      모임 추가·인원 수·총 비용 수정·완료 체크 내용은 실시간으로 동기화됩니다.<br>
       모든 접속자에게 동일하게 반영되며 일정은 날짜순으로 자동 정렬됩니다.
     </div>
   </div>
@@ -480,6 +499,17 @@ function updateCount(id, value){
   return v;
 }
 
+function updateCost(id, value){
+  let v = parseInt(value, 10);
+  if(isNaN(v) || v < 0) v = 0;
+  meetingsRef.child(id).update({ cost: v });
+  return v;
+}
+
+function formatWon(value){
+  return (Number(value) || 0).toLocaleString("ko-KR") + "원";
+}
+
 function toggleDone(id, checked){
   meetingsRef.child(id).update({ done: checked });
 }
@@ -492,11 +522,15 @@ function addRow(person){
   const dateInput = document.getElementById(person + "-date");
   const nameInput = document.getElementById(person + "-name");
   const countInput = document.getElementById(person + "-count");
+  const costInput = document.getElementById(person + "-cost");
 
   const dateVal = dateInput.value;
   const nameVal = nameInput.value.trim();
   let countVal = parseInt(countInput.value, 10);
+  let costVal = parseInt(costInput.value, 10);
+
   if(isNaN(countVal) || countVal < 1) countVal = 1;
+  if(isNaN(costVal) || costVal < 0) costVal = 0;
 
   if(!dateVal || !nameVal){
     alert("날짜와 모임명을 입력해 주세요.");
@@ -508,12 +542,14 @@ function addRow(person){
     date: dateVal,
     name: nameVal,
     count: countVal,
+    cost: costVal,
     done: false
   });
 
   dateInput.value = "";
   nameInput.value = "";
   countInput.value = "1";
+  costInput.value = "";
 }
 
 function switchTab(person){
@@ -531,8 +567,7 @@ function switchTab(person){
 function render(){
   const todayLabel = document.getElementById("todayLabel");
   const today = new Date();
-  todayLabel.textContent =
-    `오늘: ${today.getFullYear()}.${today.getMonth()+1}.${today.getDate()} 기준`;
+  todayLabel.textContent = `오늘: ${today.getFullYear()}.${today.getMonth()+1}.${today.getDate()} 기준`;
 
   renderStats();
 
@@ -548,40 +583,31 @@ function render(){
     .filter(d => d.person === person)
     .sort((a, b) => a.date.localeCompare(b.date));
 
-  let total = 0;
-  let doneCount = 0;
-
-  rows.forEach(item => {
-    total += Number(item.count) || 0;
-    if(item.done) doneCount++;
-  });
-
-  const summary = `총 ${rows.length}건 · ${total}명 · 완료 ${doneCount}/${rows.length}`;
+  const totalPeople = rows.reduce((sum, item) => sum + (Number(item.count) || 0), 0);
+  const totalCost = rows.reduce((sum, item) => sum + (Number(item.cost) || 0), 0);
+  const summary = `총 ${rows.length}건 · ${totalPeople}명 · ${formatWon(totalCost)}`;
 
   const tableRows = rows.map(item => {
     const dday = calcDday(item.date);
+    const count = Math.max(1, Number(item.count) || 1);
+    const cost = Math.max(0, Number(item.cost) || 0);
+    const perPerson = Math.round(cost / count);
 
     return `
       <tr class="${item.done ? "done" : ""}">
-        <td class="check-cell">
-          <input type="checkbox"
-            ${item.done ? "checked" : ""}
-            onchange="toggleDone('${item.id}', this.checked)">
-        </td>
+        <td class="check-cell"><input type="checkbox" ${item.done ? "checked" : ""}
+          onchange="toggleDone('${item.id}', this.checked)"></td>
         <td class="date-cell">${formatDateLabel(item.date)}</td>
         <td class="name-cell">${escapeHtml(item.name)}</td>
-        <td>
-          <input type="number" min="1" class="count-input"
-            value="${Number(item.count) || 1}"
-            onchange="updateCount('${item.id}', this.value)">
-        </td>
+        <td><input type="number" min="1" class="count-input" value="${count}"
+          onchange="updateCount('${item.id}', this.value)"></td>
+        <td class="cost-total"><input type="number" min="0" step="1000" class="cost-input"
+          value="${cost}" onchange="updateCost('${item.id}', this.value)"></td>
+        <td class="cost-per-person">${formatWon(perPerson)}</td>
         <td><span class="dday-badge ${dday.cls}">${dday.label}</span></td>
-        <td class="del-cell">
-          <button class="del-btn" title="삭제"
-            onclick="deleteRow('${item.id}')">✕</button>
-        </td>
-      </tr>
-    `;
+        <td class="del-cell"><button class="del-btn" title="삭제"
+          onclick="deleteRow('${item.id}')">✕</button></td>
+      </tr>`;
   }).join("");
 
   panel.innerHTML = `
@@ -590,51 +616,40 @@ function render(){
         <span>${label}</span>
         <span class="count-summary">${summary}</span>
       </div>
-
       <div class="table-wrap">
         <table>
-          <thead>
-            <tr>
-              <th class="check-cell"></th>
-              <th>날짜</th>
-              <th>모임명</th>
-              <th>인원 수</th>
-              <th>D-day</th>
-              <th class="del-cell"></th>
-            </tr>
-          </thead>
-          <tbody>
-            ${tableRows || '<tr><td colspan="6" class="empty">일정 없음</td></tr>'}
-          </tbody>
+          <thead><tr>
+            <th class="check-cell"></th>
+            <th>날짜</th><th>모임명</th><th>인원</th>
+            <th>총 비용</th><th>1인 비용</th><th>D-day</th>
+            <th class="del-cell"></th>
+          </tr></thead>
+          <tbody>${tableRows || '<tr><td colspan="8" class="empty">일정 없음</td></tr>'}</tbody>
         </table>
       </div>
-
       <div class="add-row">
         <input type="date" id="${person}-date">
         <input type="text" id="${person}-name" placeholder="모임명">
         <input type="number" id="${person}-count" min="1" value="1">
+        <input type="number" id="${person}-cost" min="0" step="1000" placeholder="총 비용">
         <button class="add-btn ${buttonClass}" onclick="addRow('${person}')">+ 모임 추가</button>
       </div>
-    </div>
-  `;
+    </div>`;
 
-  // Firebase 값이 갱신되어 render()가 다시 실행되어도 현재 탭 유지
   document.querySelectorAll(".tab").forEach(tab => {
     tab.classList.toggle("active", tab.dataset.person === currentTab);
   });
 }
 
 function renderStats(){
-  const all = Object.values(data);
-  const current = all.filter(item => item.person === currentTab);
-
+  const current = Object.values(data).filter(item => item.person === currentTab);
   const totalCount = current.length;
   const totalPeople = current.reduce((sum, item) => sum + (Number(item.count) || 0), 0);
-  const doneCount = current.filter(item => item.done).length;
+  const totalCost = current.reduce((sum, item) => sum + (Number(item.cost) || 0), 0);
 
   document.getElementById("stat-total").textContent = `${totalCount}건`;
   document.getElementById("stat-people").textContent = `${totalPeople}명`;
-  document.getElementById("stat-done").textContent = `${doneCount}건`;
+  document.getElementById("stat-cost").textContent = formatWon(totalCost);
 }
 
 function escapeHtml(value){
