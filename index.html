@@ -167,7 +167,7 @@
 
   table{
     width:100%;
-    min-width:760px;
+    min-width:900px;
     border-collapse:collapse;
     font-size:12px;
     table-layout:auto;
@@ -210,12 +210,13 @@
   }
 
   .name-cell{
-    min-width:190px;
-    max-width:260px;
+    min-width:360px;
+    width:360px;
+    max-width:none;
     white-space:normal;
     overflow-wrap:anywhere;
     word-break:break-word;
-    line-height:1.4;
+    line-height:1.45;
   }
 
   .check-cell{text-align:center;width:32px;min-width:32px;}
@@ -268,11 +269,16 @@
   }
 
   .edit-name{
+    display:block;
+    width:100%;
+    min-height:30px;
     font-size:12px;
-    white-space:normal;
+    white-space:pre-wrap;
     overflow-wrap:anywhere;
     word-break:break-word;
     line-height:1.4;
+    resize:none;
+    overflow:hidden;
   }
 
   .edit-date:focus,
@@ -692,6 +698,8 @@ function render(){
   document.querySelectorAll(".tab").forEach(tab => {
     tab.classList.toggle("active", tab.dataset.person === currentTab);
   });
+
+  document.querySelectorAll(".edit-name").forEach(autoResizeName);
 }
 
 function renderStats(){
