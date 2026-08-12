@@ -163,11 +163,16 @@
   .deuk-header{background:var(--deuk);}
   .bbung-header{background:var(--bbung);}
 
-  .table-wrap{overflow-x:auto;}
+  .table-wrap{
+    width:100%;
+    overflow-x:auto;
+    overflow-y:hidden;
+    -webkit-overflow-scrolling:touch;
+  }
 
   table{
     width:100%;
-    min-width:980px;
+    min-width:1100px;
     border-collapse:collapse;
     font-size:12px;
     table-layout:auto;
@@ -203,15 +208,15 @@
   }
 
   .date-cell{
-    width:72px;
-    min-width:72px;
+    width:90px;
+    min-width:90px;
     white-space:nowrap;
     font-weight:700;
   }
 
   .name-cell{
-    min-width:360px;
-    width:360px;
+    min-width:500px;
+    width:500px;
     max-width:none;
     white-space:normal;
     overflow-wrap:anywhere;
@@ -241,7 +246,7 @@
   }
 
   .cost-per-person{
-    min-width:80px;
+    min-width:95px;
     white-space:nowrap;
     font-weight:700;
     font-variant-numeric:tabular-nums;
@@ -419,6 +424,13 @@
   table{table-layout:fixed;min-width:0;}
 
   @media (max-width:600px){
+    .table-wrap{
+      width:100%;
+      overflow-x:auto;
+      -webkit-overflow-scrolling:touch;
+    }
+    table{min-width:1100px;}
+
     body{padding:0 10px 48px;}
 
     .topbar{padding-top:14px;}
