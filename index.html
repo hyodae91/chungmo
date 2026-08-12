@@ -270,13 +270,37 @@
     margin-bottom:3px;
   }
 
-  .edit-date{
-    width:78px;
-    height:22px;
-    font-size:10px;
-    color:var(--muted);
-    opacity:.75;
+  .date-button{
+    border:0;
+    background:transparent;
+    padding:4px 2px;
+    margin:0;
+    color:inherit;
+    font:inherit;
+    font-size:12px;
+    font-weight:700;
+    white-space:nowrap;
+    cursor:pointer;
+    border-radius:5px;
   }
+
+  .date-button:hover,
+  .date-button:focus{
+    background:#f0f3ff;
+    outline:none;
+  }
+
+  .hidden-date-picker{
+    position:fixed;
+    width:1px;
+    height:1px;
+    opacity:0;
+    pointer-events:none;
+    left:-100px;
+    top:-100px;
+  }
+
+  .edit-date{display:none;}
 
   .edit-name{
     display:block;
@@ -430,6 +454,9 @@
 </style>
 </head>
 <body>
+  <input id="global-date-picker" class="hidden-date-picker" type="date"
+    onchange="applyPickedDate(this.value)">
+
   <div class="app-shell">
     <div class="topbar">
       <h1>청첩장 모임 일정</h1>
@@ -621,6 +648,34 @@ function addRow(person){
   costInput.value = "";
 }
 
+
+function openDatePicker(id, currentDate){
+  const picker = document.getElementById("global-date-picker");
+  picker.dataset.meetingId = id;
+  picker.value = currentDate || "";
+  picker.focus();
+
+  // Native mobile/desktop calendar picker.
+  if(typeof picker.showPicker === "function"){
+    try {
+      picker.showPicker();
+      return;
+    } catch(e) {}
+  }
+
+  picker.click();
+}
+
+function applyPickedDate(value){
+  const picker = document.getElementById("global-date-picker");
+  const id = picker.dataset.meetingId;
+
+  if(!id || !value) return;
+
+  meetingsRef.child(id).update({ date: value });
+  picker.blur();
+}
+
 function switchTab(person){
   currentTab = person;
   localStorage.setItem("chungmo-current-tab", person);
@@ -667,9 +722,9 @@ function render(){
         <td class="check-cell"><input type="checkbox" ${item.done ? "checked" : ""}
           onchange="toggleDone('${item.id}', this.checked)"></td>
         <td class="date-cell">
-          <div class="date-display">${formatDateLabel(item.date)}</div>
-          <input type="date" class="edit-date" value="${item.date}"
-            onchange="updateDate('${item.id}', this.value)" aria-label="날짜 수정">
+          <button type="button" class="date-button"
+            onclick="openDatePicker('${item.id}', '${item.date}')"
+            aria-label="날짜 ${formatDateLabel(item.date)} 수정">${formatDateLabel(item.date)}</button>
         </td>
         <td class="name-cell"><input type="text" class="edit-name" value="${escapeAttr(item.name)}" onchange="updateName('${item.id}', this.value)" aria-label="모임명 수정"></td>
         <td><input type="number" min="1" class="count-input" value="${count}"
