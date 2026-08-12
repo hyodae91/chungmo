@@ -172,7 +172,7 @@
 
   table{
     width:100%;
-    min-width:373px;
+    min-width:473px;
     border-collapse:collapse;
     font-size:12px;
     table-layout:auto;
@@ -229,12 +229,22 @@
 
   .count-input{width:28px;padding:4px 2px;border:1px solid var(--border);border-radius:6px;text-align:center;font-size:10px;}
 
-  .cost-input{width:43px;padding:4px 2px;border:1px solid var(--border);border-radius:6px;text-align:right;font-size:10px;}
+  .cost-input{
+    width:54px;
+    box-sizing:border-box;
+    padding:3px 2px;
+    border:1px solid var(--border);
+    border-radius:5px;
+    text-align:right;
+    font-size:9px;
+  }
 
   .cost-per-person{
-    min-width:95px;
+    min-width:60px;
+    width:60px;
     white-space:nowrap;
-    font-weight:700;
+    font-weight:400;
+    font-size:8px;
     font-variant-numeric:tabular-nums;
   }
 
@@ -264,15 +274,16 @@
   .date-button{
     border:0;
     background:transparent;
-    padding:4px 2px;
+    padding:2px 0;
     margin:0;
     color:inherit;
     font:inherit;
-    font-size:12px;
+    font-size:11px;
     font-weight:700;
     white-space:nowrap;
     cursor:pointer;
-    border-radius:5px;
+    border-radius:4px;
+    letter-spacing:-0.5px;
   }
 
   .date-button:hover,
@@ -362,8 +373,8 @@
 
   /* Fixed schedule column widths */
   .schedule-table{
-    width:373px;
-    min-width:373px;
+    width:473px;
+    min-width:473px;
     table-layout:fixed;
   }
 
@@ -376,18 +387,18 @@
   .schedule-table th:nth-child(4),
   .schedule-table td:nth-child(4){width:30px;} /* people */
   .schedule-table th:nth-child(5),
-  .schedule-table td:nth-child(5){width:45px;} /* total cost */
+  .schedule-table td:nth-child(5){width:60px;} /* total cost */
   .schedule-table th:nth-child(6),
-  .schedule-table td:nth-child(6){width:45px;} /* per-person cost */
+  .schedule-table td:nth-child(6){width:60px;} /* per-person cost */
   .schedule-table th:nth-child(7),
   .schedule-table td:nth-child(7){width:30px;} /* D-day */
   .schedule-table th:nth-child(8),
   .schedule-table td:nth-child(8){width:28px;} /* delete */
 
   .schedule-table .name-cell{
-    width:150px;
-    min-width:150px;
-    max-width:150px;
+    width:170px;
+    min-width:170px;
+    max-width:170px;
     white-space:normal;
     overflow-wrap:anywhere;
     word-break:break-word;
@@ -450,7 +461,7 @@
       overflow-x:auto;
       -webkit-overflow-scrolling:touch;
     }
-    table.schedule-table.schedule-table{min-width:373px;}
+    table.schedule-table.schedule-table{min-width:473px;}
 
     body{padding:0 10px 48px;}
 
