@@ -814,7 +814,25 @@ function render(){
 
   document.querySelectorAll(".edit-name").forEach(autoResizeName);
 }
+function autoResizeName(input) {
+  if (!input) return;
 
+  const resize = () => {
+    input.style.fontSize = "14px";
+
+    let fontSize = 14;
+    while (
+      input.scrollWidth > input.clientWidth &&
+      fontSize > 9
+    ) {
+      fontSize -= 1;
+      input.style.fontSize = fontSize + "px";
+    }
+  };
+
+  resize();
+  input.addEventListener("input", resize);
+}
 function renderStats(){
   const current = Object.values(data).filter(item => item.person === currentTab);
   const totalCount = current.length;
